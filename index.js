@@ -29,10 +29,8 @@ var exports = module.exports = function (base) {
 methods.forEach(function (name) {
     exports[name] = _.curry(function (loc, q) {
         return _(function (push, next) {
-            console.log(['highland-couchr', name, loc, q]);
             couchr[name](loc, q, function (err, res, req) {
                 if (err) {
-                    console.log(['highland-couchr err', err]);
                     push(err);
                     push(null, _.nil);
                 }
