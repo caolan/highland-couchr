@@ -45,17 +45,19 @@ methods.forEach(function (name) {
 });
 
 exports.changes = function (db, q) {
-    return _(function (push, next) {
-        q = q || {};
-        if (!q.hasOwnProperty('since')) {
-            q.since = 'now';
-        }
-        q.db = db;
-        var feed = new follow.Feed(q);
+    q = q || {};
+    if (!q.hasOwnProperty('since')) {
+        q.since = 'now';
+    }
+    q.db = db;
+    var feed = new follow.Feed(q);
+    var s = _(function (push, next) {
         feed.on('change', function (change) {
             push(null, change);
         });
         feed.on('error', push);
         feed.follow();
     });
+    s.stop = feed.stop.bind(feed);
+    return s;
 };
