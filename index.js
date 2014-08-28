@@ -58,6 +58,11 @@ exports.changes = function (db, q) {
         feed.on('error', push);
         feed.follow();
     });
-    s.stop = feed.stop.bind(feed);
+    s.stop = function (callback) {
+      if (callback) {
+        feed.once('stop', callback);
+      }
+      return feed.stop();
+    };
     return s;
 };
