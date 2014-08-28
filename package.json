@@ -3,8 +3,8 @@
   "version": "1.2.1",
   "description": "Highland streams style API to CouchDB, using couchr under the hood",
   "dependencies": {
-    "couchr": "~0.0.14",
-    "highland": "~1.27.1",
-    "follow": "~0.10.4"
+    "couchr": "~0.0.15",
+    "highland": "~1.28.0",
+    "follow": "~0.11.3"
   }
 }
