@@ -50,13 +50,31 @@ exports.changes = function (db, q) {
         q.since = 'now';
     }
     q.db = db;
+    var started = false;
     var feed = new follow.Feed(q);
+    var buffer = [];
     var s = _(function (push, next) {
-        feed.on('change', function (change) {
+        function changeHandler(change) {
+            feed.removeListener('error', errorHandler);
+            feed.pause();
             push(null, change);
-        });
-        feed.on('error', push);
-        feed.follow();
+            next();
+        };
+        function errorHandler(change) {
+            feed.removeListener('change', changeHandler);
+            feed.pause();
+            push(err);
+            next();
+        };
+        feed.once('change', changeHandler);
+        feed.once('error', errorHandler);
+        if (started) {
+            feed.resume();
+        }
+        else {
+            started = true;
+            feed.follow();
+        }
     });
     s.stop = function (callback) {
       if (callback) {
