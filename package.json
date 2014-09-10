@@ -1,6 +1,6 @@
 {
   "name": "highland-couchr",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Highland streams style API to CouchDB, using couchr under the hood",
   "dependencies": {
     "couchr": "~0.0.15",
