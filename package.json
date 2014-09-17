@@ -4,7 +4,7 @@
   "description": "Highland streams style API to CouchDB, using couchr under the hood",
   "dependencies": {
     "couchr": "~0.0.15",
-    "highland": "~1.28.0",
+    "highland": "~1.29.0",
     "follow": "~0.11.3"
   }
 }
