@@ -50,36 +50,28 @@ exports.changes = function (db, q) {
         q.since = 'now';
     }
     q.db = db;
-    var feed = new follow.Feed(q);
-    var input;
+    var feed;
     var output = _(function (push, next) {
-        input = feed.follow();
-    });
-    feed.on('change', function (change) {
-        output.write(change);
-    });
-    feed.on('error', function (err) {
-        output.write({__HighlandStreamError__: true, error: err});
-    });
-    var _pause = output.pause;
-    output.pause = function () {
-        if (input && !input.is_paused) {
-            feed.pause();
+      follow(q, function (err, change) {
+        feed = this;
+        push(err, change);
+        if (output.paused) {
+          feed.pause();
         }
-        return _pause.apply(this, arguments);
-    };
+      });
+    });
     var _resume = output.resume;
     output.resume = function () {
-        if (input && input.is_paused) {
-            feed.resume();
-        }
-        return _resume.apply(this, arguments);
+      if (feed && feed.is_paused) {
+        feed.resume();
+      }
+      _resume.call(output);
     };
     output.stop = function (callback) {
       if (callback) {
-        feed.once('stop', callback);
+          feed.once('stop', callback);
       }
       return feed.stop();
     };
     return output;
-};
+  };
