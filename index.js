@@ -52,7 +52,7 @@ exports.changes = function (db, q) {
     q.db = db;
     var feed;
     var output = _(function (push, next) {
-      follow(q, function (err, change) {
+      feed = follow(q, function (err, change) {
         feed = this;
         push(err, change);
         if (output.paused) {
@@ -68,10 +68,15 @@ exports.changes = function (db, q) {
       _resume.call(output);
     };
     output.stop = function (callback) {
-      if (callback) {
+      if (feed) {
+        if (callback) {
           feed.once('stop', callback);
+        }
+        feed.stop();
       }
-      return feed.stop();
+      else if (callback) {
+        callback();
+      }
     };
     return output;
   };
